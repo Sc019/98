@@ -1,0 +1,95 @@
+#include <bits/stdc++.h>
+#include <ctime> // Include the time.h library for time-related functions
+
+using namespace std;
+
+int rSteps = 0;
+int iSteps = 0; // Added count for the iterative method
+
+int rStepFibonacci(int n) {
+    rSteps++;
+    if (n < 0) return 0;
+    if (n == 1 || n == 0) return 1;
+    return rStepFibonacci(n - 1) + rStepFibonacci(n - 2);
+}
+
+void iStepFibonacci(int n) {
+    vector<int> f;
+    f.push_back(0);
+    f.push_back(1);
+    int cnt = 2;
+    for (int i = 2; i < n; i++) {
+        cnt++;
+        f.push_back(f[i - 1] + f[i - 2]);
+    }
+    iSteps = 1; // In the iterative method, set the count to 1
+    cout << "Fibonacci Series (Iterative): ";
+    for (int i = 0; i < n; i++) {
+        cout << f[i] << " ";
+    }
+    cout << endl;
+}
+
+void printFibonacciSeries(int n) {
+    cout << "Fibonacci Series (Recursive): ";
+    for (int i = 0; i < n; i++) {
+        cout << rStepFibonacci(i) << " ";
+    }
+    cout << endl;
+}
+
+int main() {
+    int choice;
+    int n;
+    clock_t start, end; // Variables to store the start and end times
+
+    while (true) {
+        cout << "Fibonacci Series Menu:" << endl;
+        cout << "1. Calculate Iteratively" << endl;
+        cout << "2. Calculate Recursively" << endl;
+        cout << "3. Quit" << endl;
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        if (choice == 1 || choice == 2) {
+            cout << "Enter the number of Fibonacci numbers to generate: ";
+            cin >> n;
+
+            if (n <= 0) {
+                cout << "Invalid input. Please enter a positive number." << endl;
+                continue;
+            }
+
+            if (choice == 1) {
+                iSteps = 0; // Reset the iterative count
+
+                start = clock(); // Record the start time
+                iStepFibonacci(n);
+                end = clock(); // Record the end time
+
+                double elapsedTime = double(end - start) / CLOCKS_PER_SEC * 1000; // Calculate elapsed time in milliseconds
+
+                cout << "Iterative function called " << iSteps << " times." << endl;
+                cout << "Time taken: " << elapsedTime << " milliseconds" << endl;
+            } else if (choice == 2) {
+                rSteps = 0; // Reset the recursive count
+
+                start = clock(); // Record the start time
+                printFibonacciSeries(n);
+                end = clock(); // Record the end time
+
+                double elapsedTime = double(end - start) / CLOCKS_PER_SEC * 1000; // Calculate elapsed time in milliseconds
+
+                cout << "Recursive function called " << rSteps << " times." << endl;
+                cout << "Time taken: " << elapsedTime << " milliseconds" << endl;
+            }
+        } else if (choice == 3) {
+            cout << "Successfully Exited." << endl;
+            break;
+        } else {
+            cout << "Invalid choice. Please select a valid option." << endl;
+        }
+    }
+
+    return 0;
+}
