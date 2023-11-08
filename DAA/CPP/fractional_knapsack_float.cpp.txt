@@ -1,0 +1,66 @@
+#include <bits/stdc++.h>
+#include <chrono> // Include the chrono library for timing
+
+using namespace std;
+using namespace std::chrono; // Namespace for chrono
+
+bool compare(pair<int, int> p1, pair<int, int> p2) {
+    double v1 = (double) p1.first / p1.second;
+    double v2 = (double) p2.first / p2.second;
+    return v1 > v2;
+}
+
+int main() {
+    int n;
+    cout << "\nEnter Number of Objects: ";
+    cin >> n;
+    cout << "\nEnter Profit and Weight (P W):\n";
+    vector<pair<int, int>> a(n);
+    for (int i = 0; i < n; i++) {
+        cin >> a[i].first >> a[i].second;
+    }
+    int w;
+    cout << "\nEnter the Capacity: ";
+    cin >> w;
+    
+    // Start timing
+    high_resolution_clock::time_point startTime = high_resolution_clock::now();
+    
+    sort(a.begin(), a.end(), compare);
+    
+    vector<float> solution(n, 0.0);  // Solution vector to track selected objects (float data type).
+
+    double ans = 0;
+    for (int i = 0; i < n; i++) {
+        if (w >= a[i].second) {
+            ans += a[i].first;
+            w -= a[i].second;
+            solution[i] = 1.0;  // Mark the object as selected in the solution vector.
+            continue;
+        }
+        double vw = (double)a[i].first / a[i].second;
+        ans += vw * w;
+        solution[i] = (float)w / a[i].second;  // Store the fraction as a float.
+        w = 0;
+        break;
+    }
+    
+    // Stop timing
+    high_resolution_clock::time_point endTime = high_resolution_clock::now();
+
+    auto duration = duration_cast<milliseconds>(endTime - startTime).count();
+
+    cout << fixed << setprecision(2);  // Set the output format to display 2 decimal places.
+
+    cout << "\nOptimal Solution Vector: (";
+    for (int i = 0; i < n; i++) {
+        cout << solution[i] << " ";
+    }
+    cout <<")" << endl;
+
+    cout << "\nOptimal Value: " << ans << endl;
+
+    cout << "\nExecution Time: " << duration << " milliseconds" << endl;
+
+    return 0;
+}
